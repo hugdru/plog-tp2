@@ -95,7 +95,7 @@ printBody(Vars,NTeams,NRounds,NT):-
   nl,
   NT1 is NT+1,
   printBody(Vars,NTeams,NRounds,NT1).
-printBody(_,_,_,_).
+printBody(_,NTeams,_,NT):-NT>NTeams.
 
 writeNT(NT):-
   NT < 10,
@@ -132,4 +132,4 @@ printHead(NRounds,NT):-
   write(NT),
   NT1 is NT+1,
   printHead(NRounds,NT1).
-printHead(_,_).
+printHead(NRounds,NT):-NT>NRounds.
