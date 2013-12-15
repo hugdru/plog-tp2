@@ -11,6 +11,8 @@ start(NTeams,Turns,Vars):-
   restrictionsByRound(Vars,1,NRounds,NTeams),
   labeling([],Vars),
   print(Vars,NTeams,NRounds,1),
+  nl,
+  write(Vars),
   nl.
 
 restrictionsByTeam(Vars,N,NRounds,NTeams):-
@@ -80,14 +82,20 @@ even(N):- N mod 2 =:= 0.
 odd(N):- N mod 2 =\= 0.
 
 print(Vars,NTeams,NRounds,NT):-
+  write('  '),
+  printHead(NRounds,NT),
+  nl,
+  printBody(Vars,NTeams,NRounds,NT).
+
+printBody(Vars,NTeams,NRounds,NT):-
   NT =< NTeams,
   writeNT(NT),
   getTeamList(Vars,NT,NRounds,List),
   printLine(List),
   nl,
   NT1 is NT+1,
-  print(Vars,NTeams,NRounds,NT1).
-print(_,_,_,_).
+  printBody(Vars,NTeams,NRounds,NT1).
+printBody(_,_,_,_).
 
 writeNT(NT):-
   NT < 10,
@@ -108,3 +116,20 @@ printLine([H|T]):-
   write('  '),
   write(H),
   printLine(T).
+
+printHead(NRounds,NT):-
+  NT =< NRounds,
+  NT < 10,
+  write('   '),
+  write(NT),
+  NT1 is NT+1,
+  printHead(NRounds,NT1).
+
+printHead(NRounds,NT):-
+  NT =< NRounds,
+  NT >= 10,
+  write('  '),
+  write(NT),
+  NT1 is NT+1,
+  printHead(NRounds,NT1).
+printHead(_,_).
