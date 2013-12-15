@@ -46,7 +46,7 @@
 \maketitle
 
 \begin{abstract}
-O objetivo deste trabalho é a resolução de um problema de Calendarização usando restrições da linguagem PROLOG. O relatório está organizado da seguinte forma: Descrição do problema, onde se descreve o problema de forma estruturada; Ficheiros de Dados, descreve como se deve inserir os dados num ficheiro de modo a que o programa faço o que se pretende; Variáveis de Decisão, aqui podemos encontrar todas as variáveis e os respetivos domínios; Restrições, nome de algumas restrições e qual o seu objetivo; Estratégia de pesquisa, opções do labeling usadas e breve explicação do seu modo de funcionamento; Visualização da Solução, mostramos o nosso print simplificado e a cabeça da função que imprime a solução; Resultados, tempos de procura de solução por complexidade;e, Conclusões e Perspectivas de Desenvolvimento.
+    O objetivo deste trabalho é a resolução de um problema de Calendarização usando restrições da linguagem PROLOG. O relatório está organizado da seguinte forma: Descrição do problema, onde se descreve o problema de forma estruturada; Ficheiros de Dados, descreve como se deve inserir os dados num ficheiro de modo a que o programa faço o que se pretende; Variáveis de Decisão, aqui podemos encontrar todas as variáveis e os respetivos domínios; Restrições, nome de algumas restrições e qual o seu objetivo; Estratégia de pesquisa, opções do labeling usadas e breve explicação do seu modo de funcionamento; Visualização da Solução, mostramos o nosso print simplificado(sem Home/away) e o completo e a cabeça da função que imprime a solução; Resultados, tempos de procura de solução por complexidade;e, Conclusões e Perspectivas de Desenvolvimento.
 \keywords{Programação em Lógica com Restrições, PLR, Calendarização de Eventos Desportivos}
 \end{abstract}
 \newpage
@@ -108,12 +108,16 @@ Cada solução possível é imprimida para o ecrã, após o labeling. Isto é fe
 \includegraphics[scale=0.35]{./impressaoSimpli.png}
 \end{center}
 
+\begin{center}
+\includegraphics[scale=0.60]{./impressaoComple.png}
+\end{center}
+
 \section{Resultados}
 %Demonstrar exemplos de aplicação em casos práticos com
 %diferentes complexidades e analisar os resultados obtidos. Devem ser utilizadas formas
 %convenientes para apresentação dos resultados (tabelas e/ou gráficos). (Idealmente:
 %comparação de resultados com outros autores/trabalhos.)
-da
+A procura de solução até problemas de complexidade até 10 equipas é bastante rápida. No entanto, para valores superiores o tempo de espera é exponencial.
 
 \section{Conclusões e Perspectivas de Desenvolvimento}
 %Que conclusões retiram deste projeto? O que mostram os resultados obtidos? Quais as vantagens
