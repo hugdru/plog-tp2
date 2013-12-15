@@ -7,22 +7,22 @@ start(NTeams,Turns,Vars):-
   Length is NTeams*NRounds,
   length(Vars,Length),
   domain(Vars,1,NTeams),
-  restrictionsByTeam(Vars,1,NRounds,NTeams),
-  restrictionsByRound(Vars,1,NRounds,NTeams),
+  constraintsForTeam(Vars,1,NRounds,NTeams),
+  constraintsForRound(Vars,1,NRounds,NTeams),
   labeling([],Vars),
   print(Vars,NTeams,NRounds,1),
   nl,
   write(Vars),
   nl.
 
-restrictionsByTeam(Vars,N,NRounds,NTeams):-
+constraintsForTeam(Vars,N,NRounds,NTeams):-
   N =< NTeams,
   getTeamList(Vars,N,NRounds,Team),
   all_different(Team),
   allElementsDif(Team,N),
   N1 is N+1,
-  restrictionsByTeam(Vars,N1,NRounds,NTeams).
-restrictionsByTeam(_,_,_,_).
+  constraintsForTeam(Vars,N1,NRounds,NTeams).
+constraintsForTeam(_,N,_,NTeams):-N>NTeams.
 
 getTeamList(Vars,N,NRounds,Team):-
   End is N*NRounds,
@@ -59,23 +59,23 @@ add(X,[],[X]).
 add(X,[A|L],[A|L1]):-
   add(X,L,L1).
 
-restrictionsByRound(Vars,N,NRounds,NTeams):-
+constraintsForRound(Vars,N,NRounds,NTeams):-
   N =< NRounds,
   getRoundList(Vars,N,NRounds,NTeams,[],RoundList),
   all_different(RoundList),
-  restrictionsByGame(RoundList,NTeams,1),
+  constraintsForGame(RoundList,NTeams,1),
   N1 is N+1,
-  restrictionsByRound(Vars,N1,NRounds,NTeams).
-restrictionsByRound(_,_,_,_).
+  constraintsForRound(Vars,N1,NRounds,NTeams).
+constraintsForRound(_,N,NRounds,_):-N>NRounds.
 
-restrictionsByGame(RoundList,NTeams,N):-
+constraintsForGame(RoundList,NTeams,N):-
   N =< NTeams,
   getElement(RoundList,N,Element),
   element(Element,RoundList,N1),
   N #= N1,
   N2 is N+1,
-  restrictionsByGame(RoundList,NTeams,N2).
-restrictionsByGame(_,_,_).
+  constraintsForGame(RoundList,NTeams,N2).
+constraintsForGame(_,NTeams,N):-N>NTeams.
 
 even(N):- N mod 2 =:= 0.
 
