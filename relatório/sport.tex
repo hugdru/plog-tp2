@@ -46,7 +46,7 @@
 \maketitle
 
 \begin{abstract}
-O objetivo deste trabalho é a resolução de um problema de Calendarização usando restrições da linguagem PROLOG. O relatório está organizado da seguinte forma: Descrição do problema, onde se descreve o problema de forma estruturada; Ficheiros de Dados, descreve como se deve inserir os dados num ficheiro de modo a que o programa faço o que se pretende; Variáveis de Decisão, aqui podemos encontrar todas as variáveis e os respetivos domínios; Restrições, nome de algumas restrições e qual o seu objetivo; Estratégia de pesquisa, opções do labeling usadas e breve explicação do seu modo de funcionamento; Visualização da Solução, mostramos o nosso print simplificado e o completo e a cabeça da função que imprime a solução; Resultados, tempos de procura de solução por complexidade;e, Conclusões e Perspectivas de Desenvolvimento.
+O objetivo deste trabalho é a resolução de um problema de Calendarização usando restrições da linguagem PROLOG. O relatório está organizado da seguinte forma: Descrição do problema, onde se descreve o problema de forma estruturada; Ficheiros de Dados, descreve como se deve inserir os dados num ficheiro de modo a que o programa faço o que se pretende; Variáveis de Decisão, aqui podemos encontrar todas as variáveis e os respetivos domínios; Restrições, nome de algumas restrições e qual o seu objetivo; Estratégia de pesquisa, opções do labeling usadas e breve explicação do seu modo de funcionamento; Visualização da Solução, mostramos o nosso print simplificado e a cabeça da função que imprime a solução; Resultados, tempos de procura de solução por complexidade;e, Conclusões e Perspectivas de Desenvolvimento.
 \keywords{Programação em Lógica com Restrições, PLR, Calendarização de Eventos Desportivos}
 \end{abstract}
 \newpage
@@ -91,6 +91,7 @@ A única restrição flexível do nosso problema é a das jornadas mínima e má
 %Descrever, quando for o caso, a forma de
 %avaliar a solução obtida e a sua implementação utilizando o SICStus Prolog.
 %da
+\newpage
 
 \section{Estratégia de Pesquisa}
 %Descrever a estratégia de etiquetagem
@@ -101,10 +102,10 @@ A técnica de labeling utilizada é a padrão. Instanciação lado esquerdo, atu
 
 \section{Visualização da Solução}
 %Explicar os predicados solução em modo de texto (obrigatório) ou modo gráfico (opcional).
-Cada solução possível é imprimida para o ecrã, após o labeling. Isto é feito através da regra, print(Vars,NTeams,NRounds,1). Aqui se encontram alguns exemplos da versão simplificada, sem HomeAway.
+Cada solução possível é imprimida para o ecrã, após o labeling. Isto é feito através da regra, print(Vars,NTeams,NRounds,1). Aqui se encontram dois exemplos de como é feita a impressão na tela. A primeira linha vai de NEquipas até NEquipas-1, cada valor corresponde a uma jornada. Todos os valores a baixo desta linha são as equipas. Se pretendermos ver quem joga contra quem na 1ª jornada, basta olhar para a coluna com o número 1(jornada 1) e comparar os valores dessa coluna com a 1ª coluna. Podemos observar que se a equipa \textit{X} joga contra \textit{Y} o contrário também sucede.
 
 \begin{center}
-\includegraphics[scale=0.50]{./impressaoSimpli.png}
+\includegraphics[scale=0.35]{./impressaoSimpli.png}
 \end{center}
 
 \section{Resultados}
