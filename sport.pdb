@@ -2,32 +2,46 @@
 :-use_module(library(lists)).
 
 start(NTeams,Turns,Vars):-
+  even(Turns),
   even(NTeams),
   NRounds is NTeams-1,
   Length is NTeams*NRounds,
-  length(Vars,Length),
-  domain(Vars,1,NTeams),
-  constraintsForTeam(Vars,1,NRounds,NTeams),
-  constraintsForRound(Vars,1,NRounds,NTeams),
+  length(Dist,Length),
+  domain(Dist,1,NTeams),
+  length(HomeAway,Length),
+  domain(HomeAway,0,1),
+  constraintsForTeam(Dist,1,NRounds,NTeams,HomeAway),
+  constraintsForRound(Dist,1,NRounds,NTeams,HomeAway),
+  append(Dist,HomeAway,Vars),
   labeling([],Vars),
-  print(Vars,NTeams,NRounds,1),
+  print(Dist,NTeams,NRounds,1),
   nl,
+  rebuildHomeAway(HomeAway,HA),
+  printHomeAway(HA,NTeams,NRounds,1,Turns,Turns),
   write(Vars),
   nl.
 
-constraintsForTeam(Vars,N,NRounds,NTeams):-
+constraintsForTeam(Dist,N,NRounds,NTeams,HomeAway):-
   N =< NTeams,
-  getTeamList(Vars,N,NRounds,Team),
+  getTeamList(Dist,N,NRounds,Team),
   all_different(Team),
   allElementsDif(Team,N),
+%   getTeamList(HomeAway,N,NRounds,HomeAwayList),
+%   constraintsForHomeAway(HomeAwayList),
   N1 is N+1,
-  constraintsForTeam(Vars,N1,NRounds,NTeams).
-constraintsForTeam(_,N,_,NTeams):-N>NTeams.
+  constraintsForTeam(Dist,N1,NRounds,NTeams,HomeAway).
+constraintsForTeam(_,N,_,NTeams,_):-N>NTeams.
 
-getTeamList(Vars,N,NRounds,Team):-
+% constraintsForHomeAway([_]).
+% constraintsForHomeAway([_,_]).
+% constraintsForHomeAway([H,H1|T]):-
+%   H #\= H1,
+%   constraintsForHomeAway([H1|T]).
+
+getTeamList(Dist,N,NRounds,Team):-
   End is N*NRounds,
   Begin is End-(NRounds-1),
-  getSubList(Vars,Begin,End,Team).
+  getSubList(Dist,Begin,End,Team).
 
 allElementsDif([],_).
 allElementsDif([H|T],N):-
@@ -47,54 +61,83 @@ getSubList(List,Begin,End,SubList):-
   AfterLength is Length-End,
   sublist(List,SubList,BeforeLength,SubLength,AfterLength).
 
-getRoundList(Vars,N,NRounds,NTeams,L,RoundList):-
+getRoundList(Dist,N,NRounds,NTeams,L,RoundList):-
   N =< (NTeams*NRounds),
-  getElement(Vars,N,Element),
+  getElement(Dist,N,Element),
   add(Element,L,L1),
   N1 is N+NRounds,
-  getRoundList(Vars,N1,NRounds,NTeams,L1,RoundList).
+  getRoundList(Dist,N1,NRounds,NTeams,L1,RoundList).
 getRoundList(_,N,NRounds,NTeams,L,L):-N>(NTeams*NRounds).
 
 add(X,[],[X]).
 add(X,[A|L],[A|L1]):-
   add(X,L,L1).
 
-constraintsForRound(Vars,N,NRounds,NTeams):-
+constraintsForRound(Dist,N,NRounds,NTeams,HomeAway):-
   N =< NRounds,
-  getRoundList(Vars,N,NRounds,NTeams,[],RoundList),
+  getRoundList(Dist,N,NRounds,NTeams,[],RoundList),
   all_different(RoundList),
-  constraintsForGame(RoundList,NTeams,1),
+  getRoundList(HomeAway,N,NRounds,NTeams,[],HomeAwayList),
+  constraintsForGame(RoundList,NTeams,1,HomeAwayList),
   N1 is N+1,
-  constraintsForRound(Vars,N1,NRounds,NTeams).
-constraintsForRound(_,N,NRounds,_):-N>NRounds.
+  constraintsForRound(Dist,N1,NRounds,NTeams,HomeAway).
+constraintsForRound(_,N,NRounds,_,_):-N>NRounds.
 
-constraintsForGame(RoundList,NTeams,N):-
+constraintsForGame(RoundList,NTeams,N,HomeAwayList):-
   N =< NTeams,
   getElement(RoundList,N,Element),
   element(Element,RoundList,N1),
   N #= N1,
+  getElement(HomeAwayList,N,Ele),
+  element(Element,HomeAwayList,Ele1),
+  Ele #\= Ele1,
   N2 is N+1,
-  constraintsForGame(RoundList,NTeams,N2).
-constraintsForGame(_,NTeams,N):-N>NTeams.
+  constraintsForGame(RoundList,NTeams,N2,HomeAwayList).
+constraintsForGame(_,NTeams,N,_):-N>NTeams.
 
 even(N):- N mod 2 =:= 0.
 
 odd(N):- N mod 2 =\= 0.
 
-print(Vars,NTeams,NRounds,NT):-
+printHomeAway(_,_,_,_,0,_).
+printHomeAway(HomeAway,NTeams,NRounds,NT,T,Turns):-
+  T > 0,
+  Rounds is (Turns-T)+1,
+  write(Rounds),
+  write(' round'),
+  nl,
+  print(HomeAway,NTeams,NRounds,NT),
+  nl,
+  T1 is T-1,
+  invertHomeAway(HomeAway,HA),
+  printHomeAway(HA,NTeams,NRounds,NT,T1,Turns).
+
+rebuildHomeAway([],_).
+rebuildHomeAway([0|T],['H'|T1]):-
+  rebuildHomeAway(T,T1).
+rebuildHomeAway([1|T],['A'|T1]):-
+  rebuildHomeAway(T,T1).
+
+invertHomeAway([],_).
+invertHomeAway(['H'|T],['A'|T1]):-
+  invertHomeAway(T,T1).
+invertHomeAway(['A'|T],['H'|T1]):-
+  invertHomeAway(T,T1).
+
+print(Dist,NTeams,NRounds,NT):-
   write('  '),
   printHead(NRounds,NT),
   nl,
-  printBody(Vars,NTeams,NRounds,NT).
+  printBody(Dist,NTeams,NRounds,NT).
 
-printBody(Vars,NTeams,NRounds,NT):-
+printBody(Dist,NTeams,NRounds,NT):-
   NT =< NTeams,
   writeNT(NT),
-  getTeamList(Vars,NT,NRounds,List),
+  getTeamList(Dist,NT,NRounds,List),
   printLine(List),
   nl,
   NT1 is NT+1,
-  printBody(Vars,NTeams,NRounds,NT1).
+  printBody(Dist,NTeams,NRounds,NT1).
 printBody(_,NTeams,_,NT):-NT>NTeams.
 
 writeNT(NT):-
@@ -106,6 +149,12 @@ writeNT(NT):-
   write(NT).
 
 printLine([]).
+printLine(['H'|T]):-
+  write('   H'),
+  printLine(T).
+printLine(['A'|T]):-
+  write('   A'),
+  printLine(T).
 printLine([H|T]):-
   H < 10,
   write('   '),
