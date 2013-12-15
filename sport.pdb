@@ -48,7 +48,7 @@ allElementsDif([H|T],N):-
   H #\= N,
   allElementsDif(T,N).
 
-getElement([H|T],Index,Element):-
+getElement([_|T],Index,Element):-
   Index > 1,
   N is Index-1,
   getElement(T,N,Element).
