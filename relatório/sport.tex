@@ -46,21 +46,17 @@
 \maketitle
 
 \begin{abstract}
-The abstract should summarize the contents of the paper and should
-contain at least 70 and at most 150 words. It should be written using the
-\emph{abstract} environment.
-\keywords{We would like to encourage you to list your keywords within
-the abstract section}
+O objetivo deste trabalho é a resolução de um problema de Calendarização usando restrições da linguagem PROLOG. O relatório está organizado da seguinte forma: Descrição do problema, onde se descreve o problema de forma estruturada; Ficheiros de Dados, descreve como se deve inserir os dados num ficheiro de modo a que o programa faço o que se pretende; Variáveis de Decisão, aqui podemos encontrar todas as variáveis e os respetivos domínios; Restrições, nome de algumas restrições e qual o seu objetivo; Estratégia de pesquisa, opções do labeling usadas e breve explicação do seu modo de funcionamento; Visualização da Solução, mostramos o nosso print simplificado e o completo e a cabeça da função que imprime a solução; Resultados, tempos de procura de solução por complexidade;e, Conclusões e Perspectivas de Desenvolvimento.
+\keywords{Programação em Lógica com Restrições, PLR, Calendarização de Eventos Desportivos}
 \end{abstract}
 \newpage
 
 \section{Introdução}
-
 %Descrição dos objetivos e motivação do trabalho, descrição do
 %problema, (idealmente, referência a outros trabalhos na mesma área + descrição muito
 %sucinta da aproximação utilizada, salientado as principais diferenças em relação aos outros
 %trabalhos), e estrutura do resto do artigo.
-O trabalho tem como objetivo, usar os conceitos de restrições da Programação em Lógica, para fazer a Calendarização de uma Competição Desportiva. A abordagem PLR é muito mais eficiente porque segue o princípio de restringir e só depois gerar ao invés da abordagem "padrão" do prolog, gerar e testar. A forma de atacar o problema seguindo este novo princípio, é feita da seguinte maneira: 1º define-se um domínio para as variáveis do problema; 2º aplica-se restrições a essas variáveis que irão diminuir o domínio do problema, feito através de consistência dos arcos; 3º Pesquisa da solução de diferentes maneiras, por exemplo: instanciar o valor mais a esquerda e ir testando as restrições e selecionando novas instanciações e testando novamente,etc. A programação em lógica com restrições é do nosso agrado pois permite resolver problemas complexos de forma eficiente através de conceitos matemáticos: domínios, expressões sobre as variáveis restringem o domínio e procura da solução dado o domínio reduzido. Não nos foi possível dialogar com os outros grupos visto que tivemos de mudar de trabalho à última da hora. Isto deveu-se a algumas dúvidas de interpretação do enunciado de Gestão de Servidores Cloud, que nos impossibilitaram de progredir no trabalho. Mandámos dois emails ao professor Tiago Pinto Fernandes  só que no primeiro(12/05) não ficámos esclarecidos e não recebemos resposta ao segundo(13/05).
+O trabalho visa usar os conceitos de restrições da Programação em Lógica, para fazer a Calendarização de uma Competição Desportiva. A abordagem PLR é muito mais eficiente porque segue o princípio de restringir e só depois gerar ao invés da abordagem "padrão" do prolog, gerar e testar. A forma de atacar o problema seguindo este novo princípio, é feita da seguinte maneira: 1º define-se um domínio para as variáveis do problema; 2º aplica-se restrições a essas variáveis que irão diminuir o domínio do problema, feito através de consistência dos arcos; 3º Pesquisa da solução de diferentes maneiras, por exemplo: instanciar o valor mais a esquerda e ir testando as restrições e selecionando novas instanciações e testando novamente,etc. A programação em lógica com restrições é do nosso agrado pois permite resolver problemas complexos de forma eficiente através de conceitos matemáticos: domínios, expressões sobre as variáveis restringem o domínio e procura da solução dado o domínio reduzido. Não nos foi possível dialogar com os outros grupos visto que tivemos de mudar de trabalho à última da hora. Isto deveu-se a algumas dúvidas de interpretação do enunciado de Gestão de Servidores Cloud, que nos impossibilitaram de progredir no trabalho. Mandámos dois emails ao professor Tiago Pinto Fernandes só que no primeiro(12/05) não ficámos esclarecidos e não recebemos resposta ao segundo(13/05).
 
 \section{Descrição do problema}
 %Descrever sucintamente o problema de
@@ -73,23 +69,23 @@ O Calendarização tem as seguintes características:
 \item[(Opcional) Distâncias:] Se a competição for realizada em territórios vastos o critério distância deve prevalecer sobre o objetivo alternância casa/fora. Tal pode ser feito se minimizarmos as deslocações de uma equipa, juntando os jogos a realizar fora num dado local em jornadas consecutivas.
 \item[Balanceamento:] não pode haver mais do que X clubes grandes a jogar em casa numa dada jornada.
 \end{description}
-Iremos ter de transformar estas condições para restrições de modo a construir um calendário que as respeite.
+Iremos ter de transformar estas condições para restrições de modo a construir este calendário.
 
 \section{Ficheiros de Dados}
 %Descrever os problemas a resolver e o conteúdo dos
 %respetivos ficheiros de dados. Devem ser construídos pelo menos três problemas distintos
 %em ficheiros de texto separados. (Idealmente: utilização de datasets usados noutros
 %trabalhos de outros autores).
-Foram criados três ficheiros com os seguintes campos: numeroDeEquipas, numeroDeVoltas, escolha, equipa1, equipa2, jornadamin, jornadamax. Escolha pode ser \textit{1} ou \textit{0}. Não nos foi possível partilhar ficheiros com os outros grupos, devido ao problema que referimos na introdução.
+Foram criados três ficheiros com os seguintes campos: numeroDeEquipas, numeroDeVoltas, escolha, equipa1, equipa2, jornadamin, jornadamax. Escolha pode ser \textit{1} ou \textit{0}, dependendo se se quer aplicar a restrição ou não. Isto possibilitou fazer testes mais rápidos e robustos, dado que não é necessário pedir ao utilizador pelos valores (modo interativo) nem depender de uma só fonte de testes. Outra vantagem é um utilizador poder inserir diferentes dados sem ter um compilador PROLOG, algo que não seria possível se (só) houvesse valores hard-coded.
 
 \section{Variáveis de Decisão}
 %Descrever as variáveis de decisão e os seus domínios.
-da
+Foram criadas duas listas uma para guardar todos os jogos, Dist, e outra para a situação casa/fora, HomeAway. Dist e HomeAway tem tamanho NúmeroDeEquipas * NúmeroDeRondas. O domínio inicial de Dist vai de 1..4 e HomeAway de 0..1. As longo do código vão sendo introduzidas diversas restrições que fazem com que o domínio vá sendo reduzido. Por exemplo, temos regras que fazem com que numa jornada não posso haver mais que um jogo por equipa, uma equipa não pode jogar contra si mesma, numa volta uma equipa tem de jogar contra todas as outras, etc.
 
 \section{Restrições}
 %Descrever as restrições rígidas e flexíveis do problema e a sua
 %implementação utilizando o SICStus Prolog.
-A única restrição flexível do nosso problema é a das jornadas mínima e máxima para a ocorrência de um jogo entre determinadas equipas, o valor dessas equipas deve estar entre 1 e o numero de equipas. Caso a escolha seja \textit{0} então esta restrição não é imposta no nosso problema. No nosso problema temos diversas restrições fixas: restrições para os jogos das equipas, restrições para as jornadas, e para cada jogo. ConstraintForTeam, ConstraintForRound e ConstraintForGame. Foram criados vários predicados para ir buscar os valores que nos interessavam de Vars para depois se aplicarem as restrições necessárias. Por exemplo: temos um predicado chamado getTeamList, cujo objetivo é ir buscar a sublista das equipas que jogam contra uma dada equipa; getRoundList, vai buscar a lista das equipas que jogam na jornada n. Após irmos buscar essas listas aplicamos certas restrições.
+A única restrição flexível do nosso problema é a das jornadas mínima e máxima para a ocorrência de um jogo entre determinadas equipas, o valor dessas equipas deve estar entre 1 e o numero de equipas. Caso a escolha seja \textit{0} então esta restrição não é imposta no nosso problema. No nosso problema temos diversas restrições fixas: restrições para os jogos das equipas, restrições para as jornadas, e para cada jogo. ConstraintForTeam, ConstraintForRound e ConstraintForGame. Foram criados vários predicados para ir buscar as variáveis que nos interessavam de Vars(que se passa para labeling) para depois se aplicarem as restrições necessárias. Por exemplo: temos um predicado chamado getTeamList, cujo objetivo é ir buscar a sublista das equipas que jogam contra uma dada equipa; getRoundList, vai buscar a lista das equipas que jogam na jornada n. Após irmos buscar essas listas aplicamos certas restrições. ConstraintForTeam, para uma equipa \textit{N}, a lista das equipas com quem ela joga não pode ter equipas repetidas nem pode conter a equipa n. ConstraintForRound, todos os valores têm de ser diferentes visto que uma equipa não pode jogar mais que uma vez numa jornada. ConstraintForGame, numa dada jornada se uma equipa \textit{X} joga contra uma equipa \textit{Y}, \textit{Y} também joga contra \textit{X}.
 
 %\section{Função de Avaliação}
 %Descrever, quando for o caso, a forma de
@@ -100,12 +96,16 @@ A única restrição flexível do nosso problema é a das jornadas mínima e má
 %Descrever a estratégia de etiquetagem
 %(“labeling”) implementada, nomeadamente no que diz respeito à ordenação de variáveis e
 %valores. Deve também ser descrita a forma de implementação desta estratégia utilizando a
-%linguagem.
-A técnica de labeling utilizada é a padrão. Instanciação lado esquerdo, teste de restrições, instanciação, teste, etc. Até chegar a uma solução. É passado para o labeling uma lista chamada Vars. Nesta lista encontra-se os jogos de cada equipa em cada volta. NumeroEquipas*Nrondas*Voltas.
+%linguagem
+A técnica de labeling utilizada é a padrão. Instanciação lado esquerdo, atualização do arco, instanciação, etc.E caso haja falhanço é usado um mecanismo tipo Backtrack. Isto é feito até chegar-se a uma solução, o processo pode ser repetido se invocarmos um redo ; . É passado para o labeling uma lista chamada Vars, que é constituída por duas listas Dist e HomeAway. Na lista Dist os jogos são guardados da seguinte maneira, \lbrack JogosEquipa1,...,JogosEquipaN\rbrack. JogosEquipa1 possui as equipas com que a equipa1 vai jogar da ronda1 até à rondaN = Nequipas - 1. Possibilidades = NEquipas*(NEquipas - 1), Rondas = Possibilidades / Nequipas = (Nequipas - 1). Antes do labeling é feito append da lista Dist com a lista HomeAway. Dlist e HomeAway são duas listas simples, isto é, cada uma delas só possui inteiros.
 
 \section{Visualização da Solução}
 %Explicar os predicados solução em modo de texto (obrigatório) ou modo gráfico (opcional).
-Cada solução possível é imprimida para o ecrã, após o labeling. Isto é feito através da regra, print(Vars,NTeams,NRounds,1).
+Cada solução possível é imprimida para o ecrã, após o labeling. Isto é feito através da regra, print(Vars,NTeams,NRounds,1). Aqui se encontram alguns exemplos da versão simplificada, sem HomeAway.
+
+\begin{center}
+\includegraphics[scale=0.50]{./impressaoSimpli.png}
+\end{center}
 
 \section{Resultados}
 %Demonstrar exemplos de aplicação em casos práticos com
@@ -119,6 +119,6 @@ da
 %e limitações da solução proposta? (Idealmente: conclusão sobre a comparação com os
 %resultados obtidos por outros autores/trabalhos.) Como poderiam melhorar o trabalho
 %desenvolvido?
-da
+
 
 \end{document}
