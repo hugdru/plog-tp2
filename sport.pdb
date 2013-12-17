@@ -1,7 +1,7 @@
 :-use_module(library(clpfd)).
 :-use_module(library(lists)).
 
-start(NTeams,Turns,Vars):-
+start(NTeams,Turns,Vars,Cities):-
   even(Turns),
   even(NTeams),
   NRounds is NTeams-1,
@@ -12,6 +12,7 @@ start(NTeams,Turns,Vars):-
   domain(HomeAway,0,1),
   constraintsForTeam(Dist,1,NRounds,NTeams,HomeAway),
   constraintsForRound(Dist,1,NRounds,NTeams,HomeAway),
+  constraintsForCities(Dist,1,NRounds,NTeams,Cities,HomeAway),
   append(Dist,HomeAway,Vars),
   labeling([],Vars),
   print(Dist,NTeams,NRounds,1),
@@ -94,6 +95,38 @@ constraintsForGame(RoundList,NTeams,N,HomeAwayList):-
   N2 is N+1,
   constraintsForGame(RoundList,NTeams,N2,HomeAwayList).
 constraintsForGame(_,NTeams,N,_):-N>NTeams.
+
+constraintsForCities(Dist,N,NRounds,NTeams,Citiesi,HomeAway) :-
+    N =< NRounds,
+    getRoundList(Dist,N,NRounds,NTeams,[],RoundListDist),
+    getRoundList(HomeAway,N,NRounds,NTeams,[],RoundListHomeAway),
+    constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
+    N1 is N + 1,
+    constraintsForCities(Dist,N1,NRounds,NTeams,Cities,HomeAway).
+constraintsForCities(_,N,NRounds,_,_) :- N > NRounds.
+
+constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N,NTeams) :-
+    N =< NTeams,
+    getElement(Cities,N,TeamN),
+    findAllIndex(INDEXES,Cities,TeamN,1,NTeams),
+    
+    N1 is N + 1,
+    constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N1,NTeams).
+constraintsForCitiesAux(RoundList,Cities,N1,NTeams,HomeAway) :-
+
+findAllIndex(INDEXES,[H|T],KEYWORD,N,MAX) :-
+    N =< MAX,
+    H == KEYWORD,
+    add(N,INDEXES,NEWINDEXES),
+    N1 is N + 1,
+    findAllIndex(NEWINDEXES,T,KEYWORD,N1,MAX).
+findAllIndex(_,L,_,N,MAX) :- L == [] ; N > MAX.
+findAllIndex(INDEXES,[H|T],KEYWORD,N,MAX) :- H \== KEYWORD, N1 is N + 1, findAllIndex(INDEXES,T,KEYWORD,N1,MAX).
+
+differentFromList(OTHERTEAM,[H|T]) :-
+    OTHERTEAM #\= H,
+    differentFromList(OTHERTEAM,T).
+differentFromList(_,[]).
 
 even(N):- N mod 2 =:= 0.
 
