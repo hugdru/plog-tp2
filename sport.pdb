@@ -14,7 +14,7 @@ startFile :-
     nth(3,Data,Choice),
     integer(Choice),
     whatToStart(Data,Cities).
-whatToStart([NTeams,Turns,0|T],Cities) :-
+whatToStart([NTeams,Turns,0],Cities) :-
     integer(NTeams),
     NTeams > 0,
     integer(Turns),
