@@ -4,42 +4,42 @@
 nReads(7).
 
 startFile :-
-    write('What is the filename? ' ),
-    read(Filename), nl,
-    see(Filename),
-    nReads(Max),
-    readValues([],Data,1,Max),
-    see(user_input),
-    write('Cities list: '),
-    read(Cities), nl,
-    whatToStart(Data,Cities).
+  write('What is the filename? ' ),
+  read(Filename), nl,
+  see(Filename),
+  nReads(Max),
+  readValues([],Data,1,Max),
+  see(user_input),
+  write('Cities list: '),
+  read(Cities), nl,
+  whatToStart(Data,Cities).
 whatToStart([NTeams,Turns,0],Cities) :-
-    NTeams > 0,
-    Turns > 0,
-    length(Cities,Len),
-    Len == NTeams,
-    start(NTeams,Turns,_,Cities). % Deixamos esta funcao assim?
+  NTeams > 0,
+  Turns > 0,
+  length(Cities,Len),
+  Len == NTeams,
+  start(NTeams,Turns,_,Cities). % Deixamos esta funcao assim?
 whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
-    NTeams > 0,
-    Turns > 0,
-    Equipa1 > 1, Equipa1 =< NTeams,
-    Equipa1 \== Equipa2,
-    Equipa2 > 1, Equipa2 =< NTeams,
-    JornadaMin > 1, JornadaMin < JornadaMax,
-    JornadaMax < NTeams,
-    length(Cities,Len),
-    Len == NTeams,
-    start(NTeams,Turns,_,Cities). % Falta completar com os outros argumentos
+  NTeams > 0,
+  Turns > 0,
+  Equipa1 > 1, Equipa1 =< NTeams,
+  Equipa1 \== Equipa2,
+  Equipa2 > 1, Equipa2 =< NTeams,
+  JornadaMin > 1, JornadaMin < JornadaMax,
+  JornadaMax < NTeams,
+  length(Cities,Len),
+  Len == NTeams,
+  start(NTeams,Turns,_,Cities). % Falta completar com os outros argumentos
 
 readValues(HOLDER,READVALUES,N,Max) :-
-    N =< Max, N > 0,
-    var(READVALUES),
-    read(INPUT),
-    write(INPUT), write(' '),
-    integer(INPUT),
-    testReadValues(INPUT,HOLDER,HOLDER1,READVALUES,N),
-    N1 is N + 1,
-    readValues(HOLDER1,READVALUES,N1,Max).
+  N =< Max, N > 0,
+  var(READVALUES),
+  read(INPUT),
+  write(INPUT), write(' '),
+  integer(INPUT),
+  testReadValues(INPUT,HOLDER,HOLDER1,READVALUES,N),
+  N1 is N + 1,
+  readValues(HOLDER1,READVALUES,N1,Max).
 readValues(_,READVALUES,_,_) :- nonvar(READVALUES).
 readValues(HOLDER,HOLDER,N,Max) :- N > Max.
 
@@ -142,44 +142,44 @@ constraintsForGame(RoundList,NTeams,N,HomeAwayList):-
 constraintsForGame(_,NTeams,N,_):-N>NTeams.
 
 constraintsForCities(Dist,N,NRounds,NTeams,Cities,HomeAway) :-
-    N =< NRounds, N > 0,
-    getRoundList(Dist,N,NRounds,NTeams,[],RoundListDist),
-    getRoundList(HomeAway,N,NRounds,NTeams,[],RoundListHomeAway),
-    constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
-    N1 is N + 1,
-    constraintsForCities(Dist,N1,NRounds,NTeams,Cities,HomeAway).
+  N =< NRounds, N > 0,
+  getRoundList(Dist,N,NRounds,NTeams,[],RoundListDist),
+  getRoundList(HomeAway,N,NRounds,NTeams,[],RoundListHomeAway),
+  constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
+  N1 is N + 1,
+  constraintsForCities(Dist,N1,NRounds,NTeams,Cities,HomeAway).
 constraintsForCities(_,N,NRounds,_,_,_) :- N > NRounds.
 
 constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N,NTeams) :-
-    N =< NTeams, N > 0,
-    getElement(Cities,N,TeamNCity),
-    findAllIndex([],INDEXES,Cities,TeamNCity,1,NTeams),
-    indexedToList(INDEXES,RoundListHomeAway,[],SmallRoundListHomeAway,1),
-    sum(SmallRoundListHomeAway,#=<,1),
-    N1 is N + 1,
-    constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N1,NTeams).
+  N =< NTeams, N > 0,
+  getElement(Cities,N,TeamNCity),
+  findAllIndex([],INDEXES,Cities,TeamNCity,1,NTeams),
+  indexedToList(INDEXES,RoundListHomeAway,[],SmallRoundListHomeAway,1),
+  sum(SmallRoundListHomeAway,#=<,1),
+  N1 is N + 1,
+  constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N1,NTeams).
 constraintsForCitiesAux(_,_,_,N,NTeams) :- N > NTeams.
 
 indexedToList([N|RESTOINDEX],[H|T],STORE,NEWLIST,N) :-
-    N > 0,
-    add(H,STORE,NEWLIST1),
-    N1 is N + 1,
-    indexedToList(RESTOINDEX,T,NEWLIST1,NEWLIST,N1).
+  N > 0,
+  add(H,STORE,NEWLIST1),
+  N1 is N + 1,
+  indexedToList(RESTOINDEX,T,NEWLIST1,NEWLIST,N1).
 indexedToList(INDEXES,VALUES,NEWLIST,NEWLIST,_) :- INDEXES == [] ; VALUES == [].
 indexedToList(INDEXES,[_|T],STORE,NEWLIST,N) :- N1 is N + 1, indexedToList(INDEXES,T,STORE,NEWLIST,N1).
 
 findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :-
-    N =< Max, N > 0,
-    H == KEYWORD,
-    add(N,STORE,NEWINDEXES1),
-    N1 is N + 1,
-    findAllIndex(NEWINDEXES1,INDEXES,T,KEYWORD,N1,Max).
+  N =< Max, N > 0,
+  H == KEYWORD,
+  add(N,STORE,NEWINDEXES1),
+  N1 is N + 1,
+  findAllIndex(NEWINDEXES1,INDEXES,T,KEYWORD,N1,Max).
 findAllIndex(INDEXES,INDEXES,L,_,N,Max) :- L == [] ; N > Max.
 findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :- H \== KEYWORD, N1 is N + 1, findAllIndex(STORE,INDEXES,T,KEYWORD,N1,Max).
 
 differentFromList(OTHERTEAM,[H|T]) :-
-    OTHERTEAM #\= H,
-    differentFromList(OTHERTEAM,T).
+  OTHERTEAM #\= H,
+  differentFromList(OTHERTEAM,T).
 differentFromList(_,[]).
 
 even(N):- N mod 2 =:= 0.
@@ -199,13 +199,13 @@ printHomeAway(HomeAway,NTeams,NRounds,NT,T,Turns):-
   invertHomeAway(HomeAway,HA),
   printHomeAway(HA,NTeams,NRounds,NT,T1,Turns).
 
-rebuildHomeAway([],_).
+rebuildHomeAway([],[]).
 rebuildHomeAway([0|T],['H'|T1]):-
   rebuildHomeAway(T,T1).
 rebuildHomeAway([1|T],['A'|T1]):-
   rebuildHomeAway(T,T1).
 
-invertHomeAway([],_).
+invertHomeAway([],[]).
 invertHomeAway(['H'|T],['A'|T1]):-
   invertHomeAway(T,T1).
 invertHomeAway(['A'|T],['H'|T1]):-
@@ -243,11 +243,13 @@ printLine(['A'|T]):-
   write('   A'),
   printLine(T).
 printLine([H|T]):-
+  integer(NT),
   H < 10,
   write('   '),
   write(H),
   printLine(T).
 printLine([H|T]):-
+  integer(NT),
   H>=10,
   write('  '),
   write(H),
