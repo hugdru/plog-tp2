@@ -163,7 +163,7 @@ indexedToList([N|RESTOINDEX],[H|T],STORE,NEWLIST,N) :-
     add(H,STORE,NEWLIST1),
     N1 is N + 1,
     indexedToList(RESTOINDEX,T,NEWLIST1,NEWLIST,N1).
-indexedToList(INDEXES,VALUES,NEWLIST,NEWLIST) :- INDEXES == [] ; VALUES == [].
+indexedToList(INDEXES,VALUES,NEWLIST,NEWLIST,_) :- INDEXES == [] ; VALUES == [].
 indexedToList(INDEXES,[_|T],STORE,NEWLIST,N) :- N1 is N + 1, indexedToList(INDEXES,T,STORE,NEWLIST,N1).
 
 findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :-
@@ -172,7 +172,7 @@ findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :-
     add(N,STORE,NEWINDEXES1),
     N1 is N + 1,
     findAllIndex(NEWINDEXES1,INDEXES,T,KEYWORD,N1,Max).
-findAllIndex(INDEXES,INDEXES,L,_,N,Max) :- L == NULL ; N > Max.
+findAllIndex(INDEXES,INDEXES,L,_,N,Max) :- L == [] ; N > Max.
 findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :- H \== KEYWORD, N1 is N + 1, findAllIndex(STORE,INDEXES,T,KEYWORD,N1,Max).
 
 differentFromList(OTHERTEAM,[H|T]) :-
