@@ -7,33 +7,24 @@ startFile :-
     write('What is the filename?' ),
     read(Filename), nl,
     see(Filename),
+    nReads(Max),
     readValues(Data,1,Max),
     see(user),
     write('Cities list: '),
     read(Cities), nl,
-    nth(3,Data,Choice),
-    integer(Choice),
     whatToStart(Data,Cities).
 whatToStart([NTeams,Turns,0],Cities) :-
-    integer(NTeams),
     NTeams > 0,
-    integer(Turns),
     Turns > 0,
     length(Cities,Len),
     Len == NTeams,
     start(NTeams,Turns,Vars,Cities). % Deixamos esta funcao assim?
 whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
-    integer(NTeams),
     NTeams > 0,
-    integer(Turns),
     Turns > 0,
-    integer(Equipa1),
     Equipa1 > 1, Equipa1 =< NTeams,
-    integer(Equipa2),
     Equipa1 \== Equipa2,
     Equipa2 > 1, Equipa2 =< NTeams,
-    integer(JornadaMin),
-    integer(JornadaMax),
     JornadaMin > 1, JornadaMin < JornadaMax,
     JornadaMax < NTeams,
     length(Cities,Len),
@@ -41,12 +32,14 @@ whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
     start(NTeams,Turns,Vars,Cities). % Falta completar com os outros argumentos
 
 readValues([H|T],N,Max) :-
-    N > 0,
+    N < Max, N > 0,
     read(INPUT),
+    integer(INPUT),
     testReadValues(INPUT,[H|T],N),
     N1 is N + 1,
     readValues(T,N1,Max).
-readValues(LIST,N,Max) :- LIST == [] ; N > Max.
+readValues(L,_,_) :- L == [].
+readValues(L,N,Max) :- N > Max, L = [].
 
 testReadValues(0,[0|[]],3).
 testReadValues(INPUT,[H|_],N) :- N \== 3, H == INPUT.
