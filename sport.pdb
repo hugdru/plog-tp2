@@ -3,7 +3,8 @@
 
 nReads(7).
 
-startFile :-
+startFile(Vars) :-
+    var(Vars),
     write('What is the filename?' ),
     read(Filename), nl,
     see(Filename),
@@ -12,14 +13,14 @@ startFile :-
     see(user),
     write('Cities list: '),
     read(Cities), nl,
-    whatToStart(Data,Cities).
-whatToStart([NTeams,Turns,0],Cities) :-
+    whatToStart(Data,Cities,Vars).
+whatToStart([NTeams,Turns,0],Cities,Vars) :-
     NTeams > 0,
     Turns > 0,
     length(Cities,Len),
     Len == NTeams,
     start(NTeams,Turns,Vars,Cities). % Deixamos esta funcao assim?
-whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
+whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities,Vars) :-
     NTeams > 0,
     Turns > 0,
     Equipa1 > 1, Equipa1 =< NTeams,
