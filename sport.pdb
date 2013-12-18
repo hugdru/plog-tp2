@@ -142,7 +142,6 @@ constraintsForGame(_,NTeams,N,_):-N>NTeams.
 
 constraintsForCities(Dist,N,NRounds,NTeams,Cities,HomeAway) :-
     N =< NRounds, N > 0,
-    write(N), nl, %Até aqui tá bom deve falhar em alguma das 3 seguintes
     getRoundList(Dist,N,NRounds,NTeams,[],RoundListDist),
     getRoundList(HomeAway,N,NRounds,NTeams,[],RoundListHomeAway),
     constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
