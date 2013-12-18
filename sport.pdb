@@ -3,8 +3,7 @@
 
 nReads(7).
 
-startFile(Vars) :-
-    var(Vars),
+startFile :-
     write('What is the filename?' ),
     read(Filename), nl,
     see(Filename),
@@ -13,14 +12,14 @@ startFile(Vars) :-
     see(user),
     write('Cities list: '),
     read(Cities), nl,
-    whatToStart(Data,Cities,Vars).
-whatToStart([NTeams,Turns,0],Cities,Vars) :-
+    whatToStart(Data,Cities).
+whatToStart([NTeams,Turns,0],Cities) :-
     NTeams > 0,
     Turns > 0,
     length(Cities,Len),
     Len == NTeams,
-    start(NTeams,Turns,Vars,Cities). % Deixamos esta funcao assim?
-whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities,Vars) :-
+    start(NTeams,Turns,_,Cities). % Deixamos esta funcao assim?
+whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
     NTeams > 0,
     Turns > 0,
     Equipa1 > 1, Equipa1 =< NTeams,
@@ -30,7 +29,7 @@ whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities,Vars) 
     JornadaMax < NTeams,
     length(Cities,Len),
     Len == NTeams,
-    start(NTeams,Turns,Vars,Cities). % Falta completar com os outros argumentos
+    start(NTeams,Turns,_,Cities). % Falta completar com os outros argumentos
 
 readValues([H|T],N,Max) :-
     N < Max, N > 0,
@@ -152,29 +151,29 @@ constraintsForCities(_,N,NRounds,_,_,_) :- N > NRounds.
 constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N,NTeams) :-
     N =< NTeams, N > 0,
     getElement(Cities,N,TeamNCity),
-    findAllIndex(INDEXES,Cities,TeamNCity,1,NTeams),
-    indexedToList(INDEXES,RoundListHomeAway,SmallRoundListHomeAway,1),
+    findAllIndex([],INDEXES,Cities,TeamNCity,1,NTeams),
+    indexedToList(INDEXES,RoundListHomeAway,[],SmallRoundListHomeAway,1),
     sum(SmallRoundListHomeAway,#=<,1),
     N1 is N + 1,
     constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N1,NTeams).
-constraintsForCitiesAux(_,_,_,N,NTeams) :- N > NTeams. % write(N),nl. Falha lá em cima pq aqui ta sempre a imprimir 5 na sem Aux.
+constraintsForCitiesAux(_,_,_,N,NTeams) :- N > NTeams.
 
-indexedToList([N|RESTOINDEX],[H|T],NEWLIST,N) :-
+indexedToList([N|RESTOINDEX],[H|T],STORE,NEWLIST,N) :-
     N > 0,
-    add(H,NEWLIST,NEWLIST1),
+    add(H,STORE,NEWLIST1),
     N1 is N + 1,
-    indexedToList(RESTOINDEX,T,NEWLIST1,N1).
-indexedToList(INDEXES,VALUES,_,_) :- INDEXES == [] ; VALUES == [].
-indexedToList(INDEXES,[_|T],NEWLIST,N) :- N1 is N + 1, indexedToList(INDEXES,T,NEWLIST,N1).
+    indexedToList(RESTOINDEX,T,NEWLIST1,NEWLIST,N1).
+indexedToList(INDEXES,VALUES,NEWLIST,NEWLIST) :- INDEXES == [] ; VALUES == [].
+indexedToList(INDEXES,[_|T],STORE,NEWLIST,N) :- N1 is N + 1, indexedToList(INDEXES,T,STORE,NEWLIST,N1).
 
-findAllIndex(INDEXES,[H|T],KEYWORD,N,MAX) :-
-    N =< MAX, N > 0,
+findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :-
+    N =< Max, N > 0,
     H == KEYWORD,
-    add(N,INDEXES,NEWINDEXES),
+    add(N,STORE,NEWINDEXES1),
     N1 is N + 1,
-    findAllIndex(NEWINDEXES,T,KEYWORD,N1,MAX).
-findAllIndex(INDEXES,L,_,N,MAX) :- N > MAX ; INDEXES == [] ; L == [].
-findAllIndex(INDEXES,[_|T],KEYWORD,N,MAX) :- N1 is N + 1, findAllIndex(INDEXES,T,KEYWORD,N1,MAX).
+    findAllIndex(NEWINDEXES1,INDEXES,T,KEYWORD,N1,Max).
+findAllIndex(INDEXES,INDEXES,L,_,N,Max) :- L == NULL ; N > Max.
+findAllIndex(STORE,INDEXES,[H|T],KEYWORD,N,Max) :- H \== KEYWORD, N1 is N + 1, findAllIndex(STORE,INDEXES,T,KEYWORD,N1,Max).
 
 differentFromList(OTHERTEAM,[H|T]) :-
     OTHERTEAM #\= H,
