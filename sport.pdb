@@ -243,13 +243,13 @@ printLine(['A'|T]):-
   write('   A'),
   printLine(T).
 printLine([H|T]):-
-  integer(NT),
+  integer(H),
   H < 10,
   write('   '),
   write(H),
   printLine(T).
 printLine([H|T]):-
-  integer(NT),
+  integer(H),
   H>=10,
   write('  '),
   write(H),
