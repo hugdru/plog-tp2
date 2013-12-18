@@ -56,7 +56,6 @@ start(NTeams,Turns,Vars,Cities):-
   constraintsForTeam(Dist,1,NRounds,NTeams,HomeAway),
   constraintsForRound(Dist,1,NRounds,NTeams,HomeAway),
   constraintsForCities(Dist,1,NRounds,NTeams,Cities,HomeAway),
-  write('Nao sai do constraintsForCities'), nl,
   append(Dist,HomeAway,Vars),
   labeling([],Vars),
   print(Dist,NTeams,NRounds,1),
@@ -148,7 +147,7 @@ constraintsForCities(Dist,N,NRounds,NTeams,Cities,HomeAway) :-
     constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
     N1 is N + 1,
     constraintsForCities(Dist,N1,NRounds,NTeams,Cities,HomeAway).
-constraintsForCities(_,N,NRounds,_,_) :- N > NRounds.
+constraintsForCities(_,N,NRounds,_,_,_) :- N > NRounds.
 
 constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N,NTeams) :-
     N =< NTeams, N > 0,
