@@ -4,12 +4,12 @@
 nReads(7).
 
 startFile :-
-    write('What is the filename?' ),
+    write('What is the filename? ' ),
     read(Filename), nl,
     see(Filename),
     nReads(Max),
-    readValues(Data,1,Max),
-    see(user),
+    readValues([],Data,1,Max),
+    see(user_input),
     write('Cities list: '),
     read(Cities), nl,
     whatToStart(Data,Cities).
@@ -31,18 +31,20 @@ whatToStart([NTeams,Turns,1,Equipa1,Equipa2,JornadaMin,JornadaMax],Cities) :-
     Len == NTeams,
     start(NTeams,Turns,_,Cities). % Falta completar com os outros argumentos
 
-readValues([H|T],N,Max) :-
-    N < Max, N > 0,
+readValues(HOLDER,READVALUES,N,Max) :-
+    N =< Max, N > 0,
+    var(READVALUES),
     read(INPUT),
+    write(INPUT), write(' '),
     integer(INPUT),
-    testReadValues(INPUT,[H|T],N),
+    testReadValues(INPUT,HOLDER,HOLDER1,READVALUES,N),
     N1 is N + 1,
-    readValues(T,N1,Max).
-readValues(L,_,_) :- L == [].
-readValues(L,N,Max) :- N > Max, L = [].
+    readValues(HOLDER1,READVALUES,N1,Max).
+readValues(_,READVALUES,_,_) :- nonvar(READVALUES).
+readValues(HOLDER,HOLDER,N,Max) :- N > Max.
 
-testReadValues(0,[0|[]],3).
-testReadValues(INPUT,[H|_],N) :- N \== 3, H == INPUT.
+testReadValues(0,HOLDER,HOLDER,READVALUES,3) :- add(0,HOLDER,READVALUES).
+testReadValues(INPUT,HOLDER,HOLDER1,_,N) :- N \== 3, add(INPUT,HOLDER,HOLDER1).
 
 start(NTeams,Turns,Vars,Cities):-
   even(Turns),
