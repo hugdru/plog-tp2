@@ -49,7 +49,7 @@ readValues([H|T],N,Max) :-
 readValues(LIST,N,Max) :- LIST == [] ; N > Max.
 
 testReadValues(0,[0|[]],3).
-testReadValues(INPUT,[H|T],N) :- N \== 3, H == INPUT.
+testReadValues(INPUT,[H|_],N) :- N \== 3, H == INPUT.
 
 start(NTeams,Turns,Vars,Cities):-
   even(Turns),
@@ -63,6 +63,7 @@ start(NTeams,Turns,Vars,Cities):-
   constraintsForTeam(Dist,1,NRounds,NTeams,HomeAway),
   constraintsForRound(Dist,1,NRounds,NTeams,HomeAway),
   constraintsForCities(Dist,1,NRounds,NTeams,Cities,HomeAway),
+  write('Nao sai do constraintsForCities'), nl,
   append(Dist,HomeAway,Vars),
   labeling([],Vars),
   print(Dist,NTeams,NRounds,1),
@@ -148,6 +149,7 @@ constraintsForGame(_,NTeams,N,_):-N>NTeams.
 
 constraintsForCities(Dist,N,NRounds,NTeams,Cities,HomeAway) :-
     N =< NRounds, N > 0,
+    write(N), nl, %Até aqui tá bom deve falhar em alguma das 3 seguintes
     getRoundList(Dist,N,NRounds,NTeams,[],RoundListDist),
     getRoundList(HomeAway,N,NRounds,NTeams,[],RoundListHomeAway),
     constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,1,NTeams),
@@ -163,7 +165,7 @@ constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N,NTeams) :-
     sum(SmallRoundListHomeAway,#=<,1),
     N1 is N + 1,
     constraintsForCitiesAux(RoundListDist,RoundListHomeAway,Cities,N1,NTeams).
-constraintsForCitiesAux(_,_,_,N,NTeams) :- N > NTeams.
+constraintsForCitiesAux(_,_,_,N,NTeams) :- N > NTeams. % write(N),nl. Falha lá em cima pq aqui ta sempre a imprimir 5 na sem Aux.
 
 indexedToList([N|RESTOINDEX],[H|T],NEWLIST,N) :-
     N > 0,
